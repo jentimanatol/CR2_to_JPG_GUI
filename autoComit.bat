@@ -4,6 +4,6 @@ git commit -m "Auto commit"
 git push origin main
 
 :: === Tagging for GitHub Actions Release Build ===
-git tag v2.3
-git push origin v2.3
+git tag v1.0
+git push origin v1.0
 pause
