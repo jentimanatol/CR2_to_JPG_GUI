@@ -1,30 +1,120 @@
 # CR2 to JPG Converter
 
-A Windows desktop application for converting Canon `.CR2` RAW photographs to high-quality `.JPG` files.
+**Version 1.0.0**
+
+A simple Windows desktop application for converting Canon `.CR2` RAW photos to high-quality `.JPG` images.
+
+---
+
+## Download
+
+### Windows EXE
+
+[![Download EXE](https://img.shields.io/badge/Download-Windows%20EXE-blue?style=for-the-badge&logo=windows)](https://github.com/jentimanatol/CR2-to-JPG-Converter/releases/latest/download/CR2-to-JPG-Converter.exe)
+
+**Latest version:** `v1.0.0`
+
+You can also download the latest release from:
+
+[GitHub Releases](https://github.com/jentimanatol/CR2-to-JPG-Converter/releases/latest)
+
+> No Python installation is required when using the compiled `.exe`.
+
+---
 
 ## Features
 
-- Select a folder containing Canon CR2 files
-- Convert all `.CR2` files to `.JPG`
+- Convert Canon `.CR2` RAW files to `.JPG`
+- High-quality JPEG output
+- Adjustable JPEG quality
+- Select source folder
 - Optional separate output folder
-- Adjustable JPEG quality from 50 to 100
+- Convert all CR2 files in a folder
 - Include subfolders
 - Preserve subfolder structure
-- Skip or overwrite existing JPG files
-- Progress bar and conversion log
-- Stop button
-- Keeps original CR2 files untouched
-- Standalone Windows EXE with PyInstaller
-- GitHub Actions workflow for automatic EXE builds
+- Skip existing JPG files
+- Optional overwrite
+- Progress bar
+- Conversion log
+- Stop conversion button
+- Open output folder directly from the app
+- Original CR2 files are never deleted
+- Standalone Windows `.exe`
+- Automatic EXE builds with GitHub Actions
 
-## Run from Python
+---
+
+## Screenshot
+
+Add a screenshot of the application here after uploading one to the repository:
+
+```markdown
+![CR2 to JPG Converter](assets/screenshot.png)
+```
+
+---
+
+## How to Use
+
+1. Download `CR2-to-JPG-Converter.exe`.
+2. Open the application.
+3. Select the folder containing your `.CR2` files.
+4. Select an output folder, or leave it blank to save JPG files beside the CR2 files.
+5. Choose the JPEG quality.
+6. Click **Convert CR2 to JPG**.
+7. Wait for the progress bar to finish.
+8. Click **Open Output Folder** to view the converted photos.
+
+---
+
+## JPEG Quality
+
+The default JPEG quality is:
+
+```text
+95
+```
+
+This provides very high image quality while keeping the JPG file size smaller than the original RAW file.
+
+---
+
+## RAW Processing
+
+The application uses:
+
+- [rawpy](https://pypi.org/project/rawpy/)
+- [LibRaw](https://www.libraw.org/)
+- [Pillow](https://python-pillow.org/)
+
+The converter uses the camera white balance when available.
+
+Because Canon Digital Photo Professional, Adobe Camera Raw, Lightroom, Darktable, and LibRaw use different RAW-processing engines, the resulting JPG may look slightly different from Canon's own JPEG rendering.
+
+---
+
+## Run from Source
+
+### Requirements
+
+- Python 3.11 or newer
+- Windows 10 or Windows 11
+
+Install dependencies:
 
 ```powershell
 py -m pip install -r requirements.txt
+```
+
+Run the application:
+
+```powershell
 py app.py
 ```
 
-## Build the EXE locally
+---
+
+## Build the Windows EXE Locally
 
 Double-click:
 
@@ -32,45 +122,91 @@ Double-click:
 build_exe.bat
 ```
 
-or run:
+Or run:
 
 ```powershell
 py -m pip install -r requirements-build.txt
-py -m PyInstaller --clean --noconfirm CR2_to_JPG.spec
+pyinstaller CR2_to_JPG.spec
 ```
 
-The EXE will appear here:
+The generated executable will be located at:
 
 ```text
 dist\CR2-to-JPG-Converter.exe
 ```
 
-## GitHub Actions EXE build
+---
 
-The included workflow is:
+## Automatic GitHub Build
+
+This project includes a GitHub Actions workflow:
 
 ```text
 .github/workflows/build-windows.yml
 ```
 
-After you push the repository to GitHub, open:
+Every push to the `main` branch can automatically build the Windows executable.
 
-**GitHub -> Actions -> Build Windows EXE -> latest successful run -> Artifacts**
+To manually build it on GitHub:
 
-Download:
+1. Open the repository.
+2. Click **Actions**.
+3. Select **Build Windows EXE**.
+4. Click **Run workflow**.
+5. Wait for the build to finish.
+6. Download the generated artifact.
+
+---
+
+## Creating a Release
+
+To make the **Download EXE** button above work, publish the EXE as a GitHub Release asset with exactly this filename:
 
 ```text
-CR2-to-JPG-Converter-Windows
+CR2-to-JPG-Converter.exe
 ```
 
-The workflow runs on pushes to `main`, pull requests to `main`, version tags such as `v1.0.0`, and manual workflow runs.
+For version 1.0.0, create a tag:
 
-## RAW processing
+```text
+v1.0.0
+```
 
-The application uses `rawpy`, which is based on LibRaw, and Pillow for JPEG encoding. It uses the camera white balance when available and exports 8-bit JPEG files.
+Then upload:
 
-Different RAW processors can render color and tone slightly differently from Canon Digital Photo Professional, Lightroom, or Adobe Camera Raw.
+```text
+CR2-to-JPG-Converter.exe
+```
+
+to that GitHub Release.
+
+The README download button always points to the newest release:
+
+```text
+https://github.com/jentimanatol/CR2-to-JPG-Converter/releases/latest/download/CR2-to-JPG-Converter.exe
+```
+
+---
+
+## Version
+
+### v1.0.0
+
+Initial release.
+
+- CR2 to JPG conversion
+- Windows GUI
+- Batch folder conversion
+- Progress tracking
+- Adjustable JPEG quality
+- Recursive folder support
+- GitHub Actions EXE build
+- Standalone Windows executable
+
+---
 
 ## License
 
-MIT
+MIT License
+
+Copyright © 2026 Anatolie Jentimir
