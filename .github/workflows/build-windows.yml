@@ -1,51 +1,75 @@
-name: Build Windows EXE
+name: Build and Release Windows EXE
 
 on:
   workflow_dispatch:
+
   push:
-    branches: [main]
-    tags: ["v*"]
+    branches:
+      - main
+    tags:
+      - "v*"
+
   pull_request:
-    branches: [main]
+    branches:
+      - main
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build-windows:
+    name: Build Windows EXE
     runs-on: windows-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Set up Python 3.13
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-          cache: pip
+          cache: "pip"
+
+      - name: Show Python version
+        run: python --version
 
       - name: Upgrade pip
         run: python -m pip install --upgrade pip
 
-      - name: Install dependencies
+      - name: Install build dependencies
         run: python -m pip install -r requirements-build.txt
 
-      - name: Build Windows executable
+      - name: Build Windows EXE
         run: python -m PyInstaller --clean --noconfirm CR2_to_JPG.spec
 
-      - name: Verify executable
+      - name: Verify EXE
         shell: powershell
         run: |
-          if (!(Test-Path "dist\CR2-to-JPG-Converter.exe")) {
-            throw "EXE was not generated."
-          }
-          Get-Item "dist\CR2-to-JPG-Converter.exe" | Format-List Name,Length,LastWriteTime
+          $exe = "dist\CR2-to-JPG-Converter.exe"
 
-      - name: Upload Windows EXE artifact
+          if (!(Test-Path $exe)) {
+            throw "Build failed: $exe was not generated."
+          }
+
+          Write-Host "Build successful:"
+          Get-Item $exe | Format-List Name, Length, LastWriteTime, FullName
+
+      - name: Upload EXE as workflow artifact
         uses: actions/upload-artifact@v4
         with:
           name: CR2-to-JPG-Converter-Windows
           path: dist/CR2-to-JPG-Converter.exe
           if-no-files-found: error
           retention-days: 30
+
+      - name: Create GitHub Release and upload EXE
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/CR2-to-JPG-Converter.exe
+          generate_release_notes: true
+          make_latest: true
+          fail_on_unmatched_files: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
